@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+REGEX="^(feature|bugfix|hotfix|release|merge)\/([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)$"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo "Branch name: ${GREEN}$BRANCH${NC}"
+
+if ! echo "$BRANCH" | grep -qE "$REGEX"; then
+  echo "${RED}Your branch name does not follow the required convention.${NC}"
+  echo "Please rename your branch using the pattern:"
+echo "Please rename your branch with '(feature|bugfix|hotfix|release|merge)(.<ticket>?).<subject-example>' syntax${NC}"
+  exit 1
+fi
+
+# Disable concurrent run for lint-staged and run it after branch validation
+cd "$(dirname "$0")/.." && npx --no lint-staged --concurrent false
