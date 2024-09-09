@@ -14,10 +14,6 @@ jobs:
     name: Update all dependencies
     runs-on: ubuntu-latest
 
-    env:
-      BUN_INSTALL: $HOME/.bun
-      PATH: $BUN_INSTALL/bin:$PATH
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -25,13 +21,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "export BUN_INSTALL=\$HOME/.bun" >> $BASH_ENV
-          echo "export PATH=\$BUN_INSTALL/bin:\$PATH" >> $BASH_ENV
-          source $BASH_ENV
-          bun --version
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies using Bun
         run: bun install

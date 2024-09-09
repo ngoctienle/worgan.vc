@@ -16,10 +16,6 @@ jobs:
     name: Build with ${{ matrix.node-version }}
     runs-on: ubuntu-latest
 
-    env:
-      BUN_INSTALL: $HOME/.bun
-      PATH: $BUN_INSTALL/bin:$PATH
-
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -27,13 +23,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "export BUN_INSTALL=\$HOME/.bun" >> $BASH_ENV
-          echo "export PATH=\$BUN_INSTALL/bin:\$PATH" >> $BASH_ENV
-          source $BASH_ENV
-          bun --version
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies using Bun
         run: bun install
@@ -49,26 +41,19 @@ jobs:
     name: Run all tests
     runs-on: ubuntu-latest
 
-    env:
-      BUN_INSTALL: $HOME/.bun
-      PATH: $BUN_INSTALL/bin:$PATH
-
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Retrieve Git history, needed to verify commits
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "export BUN_INSTALL=\$HOME/.bun" >> $BASH_ENV
-          echo "export PATH=\$BUN_INSTALL/bin:\$PATH" >> $BASH_ENV
-          source $BASH_ENV
-          bun --version
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies using Bun
         run: bun install
