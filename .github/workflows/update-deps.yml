@@ -1,0 +1,43 @@
+name: Update dependencies
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *' # Scheduled to run at 00:00 on the first of every month
+
+jobs:
+  update:
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    name: Update all dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies using Bun
+        run: bun install
+
+      - name: Update dependencies
+        run: npx npm-check-updates -u
+
+      - name: Clean up old modules and lock file
+        run: rm -Rf node_modules bun.lockb
+
+      - name: Reinstall dependencies with Bun
+        run: bun install
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: 'chore(deps): update dependencies to the latest version'
