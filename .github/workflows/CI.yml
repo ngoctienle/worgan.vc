@@ -22,9 +22,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install | bash
+      - name: Install dependencies using Bun
+        run: bun install
+      - name: Build the project
+        run: bun run build
 
   test:
     strategy:
@@ -42,15 +45,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-      - run: npm ci
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install | bash
+      - name: Install dependencies using Bun
+        run: bun install
 
       - if: github.event_name == 'pull_request'
         name: Validate all commits from PR
         run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
       - name: Linter
-        run: npm run lint
+        run: bun run lint
 
       - name: Type checking
-        run: npm run check-types
+        run: bun run check-types

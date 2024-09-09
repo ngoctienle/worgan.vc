@@ -3,7 +3,7 @@ name: Update dependencies
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *'
+    - cron: '0 0 1 * *' # Scheduled to run at 00:00 on the first of every month
 
 jobs:
   update:
@@ -20,12 +20,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-      - run: npm ci
 
-      - run: npx npm-check-updates -u # Update dependencies
-      - run: rm -Rf node_modules package-lock.json
-      - run: npm install
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install | bash
+
+      - name: Install dependencies using Bun
+        run: bun install
+
+      - name: Update dependencies
+        run: npx npm-check-updates -u # This step is still using `npx` to update dependencies
+
+      - name: Clean up old modules and lock file
+        run: rm -Rf node_modules bun.lockb
+
+      - name: Reinstall dependencies with Bun
+        run: bun install
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
