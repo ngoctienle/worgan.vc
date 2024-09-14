@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "clean": "rimraf .next out coverage",
+    "clean": "rimraf .next out coverage node_modules",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check-types": "tsc --noEmit --pretty",
@@ -64,6 +64,7 @@
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
+    "tailwind-styled-components": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.2",
     "zod": "^3.23.8"
@@ -98,7 +99,6 @@
     "postcss": "^8",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
-    "tailwind-styled-components": "^2.2.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.4"
   },
