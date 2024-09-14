@@ -1,3 +1,4 @@
+import defaultTheme from 'tailwindcss/defaultTheme'
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -9,7 +10,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        base: ['"Phudu"', ...defaultTheme.fontFamily.sans]
+      },
       colors: {
+        orange: '#FD8A46',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
