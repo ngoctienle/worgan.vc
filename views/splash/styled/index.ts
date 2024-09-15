@@ -48,4 +48,20 @@ ${(p) => {
   }}
 `
 
-export { PreLoader, PreLoaderContent, PreLoaderContentContainer, TextPosition, TextWrapper }
+const ProgressWrapper = tw.div`
+relative
+`
+const ProgressContent = tw(Flex)``
+const ProgressGrid = tw(Flex)``
+const ProgressIndicator = tw.div`
+border p-2 w-[100px] flex items-center justify-center
+`
+const ProgressBar = tw.div``
+const ProgressBarEmpty = tw(ProgressBar)`
+relative overflow-hidden h-[1vw] border
+`
+const ProgressBarFull = tw(ProgressBar)`
+absolute inset-0 w-[0%]
+`
+
+export { PreLoader, PreLoaderContent, PreLoaderContentContainer, ProgressBar, ProgressBarEmpty, ProgressBarFull, ProgressContent, ProgressGrid, ProgressIndicator, ProgressWrapper, TextPosition, TextWrapper }
