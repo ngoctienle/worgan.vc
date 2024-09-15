@@ -14,15 +14,18 @@ type ScrambleTextProps = {
   chars?: string
   timeLineDuration?: number
   delay?: number
+  mainColor?: React.CSSProperties['color']
 }
 
-export const ScrambleText: React.FC<ScrambleTextProps> = ({ text, chars, timeLineDuration, delay, className }) => {
+export const ScrambleText: React.FC<ScrambleTextProps> = ({ text, chars, timeLineDuration, delay, className, mainColor }) => {
   const containerRef = useRef<HTMLSpanElement>(null)
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { duration: 2, ease: 'none' } })
 
     tl.to('#scramble', {
+      color: mainColor
+    }).to('#scramble', {
       duration: timeLineDuration || 3,
       scrambleText: { text, chars },
       delay
