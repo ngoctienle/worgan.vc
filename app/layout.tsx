@@ -1,3 +1,4 @@
+import CursorCore from '@/components/cursor'
 import { Phudu } from 'next/font/google'
 import type { Metadata } from 'next'
 import './globals.css'
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${phuduFont.className} antialiased`}
       >
+        <CursorCore />
         {children}
       </body>
     </html>

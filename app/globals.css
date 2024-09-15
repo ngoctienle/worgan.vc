@@ -87,7 +87,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-base;
+    @apply bg-background text-foreground font-base cursor-none;
   }
 
   .grain-overlay {
@@ -96,5 +96,16 @@ body {
     background-image: url('/gifs/grain.gif');
     background-position: 0;
     background-size: auto;
+  }
+
+  .cursor-animation {
+    transition:
+      0.3s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform,
+      0.2s cubic-bezier(0.75, -0.27, 0.3, 1.33) opacity;
+  }
+  .cursor-follower-animation {
+    transition:
+      0.6s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform,
+      0.2s cubic-bezier(0.75, -0.27, 0.3, 1.33) opacity;
   }
 }
