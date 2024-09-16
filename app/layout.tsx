@@ -1,4 +1,5 @@
 import CursorCore from '@/components/cursor'
+import SplashView from '@/views/splash'
 import { Phudu } from 'next/font/google'
 import type { Metadata } from 'next'
 import './globals.css'
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${phuduFont.className} antialiased`}
       >
         <CursorCore />
+        <SplashView />
         {children}
       </body>
     </html>

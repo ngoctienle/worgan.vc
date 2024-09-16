@@ -5,21 +5,19 @@ import { ScrambleText } from '@/components/scramble-text'
 import { GrainOverlay, Section } from '@/components/styled/common'
 
 import { useGSAP } from '@gsap/react'
+import { motion } from 'framer-motion'
 import gsap from 'gsap'
-import DrawSVGPlugin from 'gsap-trial/DrawSVGPlugin'
-
 import { useRef } from 'react'
+
 import { bottomLeftScrambleText, bottomRightScrambleText, topLeftScrambleText, topRightScrambleText, } from './constants'
 import { PreLoader, PreLoaderContent, PreLoaderContentContainer, ProgressBar, ProgressBarEmpty, ProgressBarFull, ProgressContent, ProgressGrid, ProgressIndicator, ProgressWrapper, TextPosition, TextWrapper } from './styled'
 
-gsap.registerPlugin(useGSAP, DrawSVGPlugin)
+gsap.registerPlugin(useGSAP)
 
 const loadingColor = '#FD8A46'
 
 const SplashView: React.FC = () => {
   const scopeRef = useRef<HTMLDivElement>(null)
-  const topPathRef = useRef<SVGPathElement>(null)
-  const bottomPathRef = useRef<SVGPathElement>(null)
   const progressContentRef = useRef<HTMLDivElement>(null)
   const textTopRef = useRef<HTMLDivElement>(null)
   const gridRef = useRef<HTMLDivElement>(null)
@@ -28,16 +26,14 @@ const SplashView: React.FC = () => {
   const progressBarRef = useRef<HTMLDivElement>(null)
   const percentageRef = useRef<HTMLParagraphElement>(null)
 
+  const topPathRef = useRef<SVGPathElement>(null)
+  const bottomPathRef = useRef<SVGPathElement>(null)
+
   useGSAP(() => {
     const tl = gsap.timeline()
 
     gsap.set(scopeRef.current, {
       color: loadingColor,
-    })
-
-    gsap.set([topPathRef.current, bottomPathRef.current], {
-      drawSVG: '50% 50%',
-      stroke: 'rgba(253, 138, 70, 0)',
     })
 
     gsap.set(progressContentRef.current, {
@@ -49,19 +45,13 @@ const SplashView: React.FC = () => {
       opacity: 0,
     })
 
-    tl.to([topPathRef.current, bottomPathRef.current], {
-      drawSVG: '0% 100%',
-      duration: 0.8,
+    tl.to(progressContentRef.current, {
+      width: '40vw',
+      duration: 0.6,
+      border: `1px solid ${loadingColor}`,
+      backgroundColor: '#0e0e0efc',
       ease: 'power4',
-      stroke: loadingColor,
     })
-      .to(progressContentRef.current, {
-        width: '40vw',
-        duration: 0.6,
-        border: `1px solid ${loadingColor}`,
-        backgroundColor: '#0e0e0efc',
-        ease: 'power4',
-      })
       .to(progressContentRef.current, {
         height: '11vw',
         duration: 0.6,
@@ -102,11 +92,9 @@ const SplashView: React.FC = () => {
         progressBlinkRef.current!.parentElement!.style.borderColor = '#FEEDD8'
         progressBarRef.current!.parentElement!.style.borderColor = '#FEEDD8'
 
+        gsap.to([topPathRef.current, bottomPathRef.current], { stroke: '#FEEDD8' })
         gsap.to(textBottomRef.current, { opacity: 0 })
         gsap.to(scopeRef.current, { color: '#FEEDD8' })
-        gsap.to([topPathRef.current, bottomPathRef.current], {
-          stroke: '#FEEDD8',
-        })
         gsap.to(progressContentRef.current, {
           border: '1px solid #FEEDD8',
         })
@@ -116,7 +104,7 @@ const SplashView: React.FC = () => {
 
         gsap.to(scopeRef.current, {
           opacity: 0,
-          duration: 0.3,
+          duration: 0.4,
           delay: 0.8,
           ease: 'power4.out',
           onComplete() {
@@ -142,9 +130,15 @@ const SplashView: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
             >
-              <path
-                ref={topPathRef}
+              <motion.path
                 d="M0 1H923.77L938.343 18.8115H1620.85L1641.09 1H2560"
+                initial={{ pathLength: 0, stroke: '#FEEDD8' }}
+                animate={{ pathLength: 1, stroke: loadingColor }}
+                transition={{
+                  pathLength: { duration: 0.8, ease: 'easeInOut' },
+                  stroke: { duration: 0.8, ease: 'easeInOut' },
+                }}
+                ref={topPathRef}
                 strokeWidth="2"
               />
             </svg>
@@ -152,14 +146,14 @@ const SplashView: React.FC = () => {
             <TextPosition $position='bl'>
               <TextWrapper>
                 {topLeftScrambleText.map(text => (
-                  <ScrambleText key={text.text} {...text} duration={1} className='font-semibold' />
+                  <ScrambleText key={text.text} {...text} className='font-semibold' />
                 ))}
               </TextWrapper>
             </TextPosition>
             <TextPosition $position='br'>
               <TextWrapper>
                 {topRightScrambleText.map(text => (
-                  <ScrambleText key={text.text} {...text} duration={1} className='font-semibold' />
+                  <ScrambleText key={text.text} {...text} className='font-semibold' />
                 ))}
               </TextWrapper>
             </TextPosition>
@@ -183,7 +177,7 @@ const SplashView: React.FC = () => {
               <p ref={percentageRef} className='w-10 font-medium tracking-widest'>0%</p>
             </ProgressGrid>
             <div ref={textBottomRef} className='opacity-0'>
-              <ScrambleText text='< Unable to cancel />' delay={0.8} className='font-semibold' />
+              <ScrambleText text='< Unable to cancel />' className='font-semibold' />
             </div>
           </ProgressContent>
         </ProgressWrapper>
@@ -198,20 +192,30 @@ const SplashView: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
             >
-              <path ref={bottomPathRef} d="M0 19H923.77L938.343 1.18849H1620.85L1641.09 19H2560" strokeWidth="2" />
+              <motion.path
+                d="M2560 19H1641.09L1620.85 1.18849H938.343L923.77 19H0"
+                initial={{ pathLength: 0, stroke: '#FEEDD8' }}
+                animate={{ pathLength: 1, stroke: loadingColor }}
+                transition={{
+                  pathLength: { duration: 0.8, ease: 'easeInOut' },
+                  stroke: { duration: 0.8, ease: 'easeInOut' },
+                }}
+                ref={bottomPathRef}
+                strokeWidth="2"
+              />
             </svg>
 
             <TextPosition $position='tl'>
               <TextWrapper>
                 {bottomLeftScrambleText.map(text => (
-                  <ScrambleText key={text.text} {...text} duration={1} className='font-semibold' />
+                  <ScrambleText key={text.text} {...text} className='font-semibold' />
                 ))}
               </TextWrapper>
             </TextPosition>
             <TextPosition $position='tr'>
               <TextWrapper>
                 {bottomRightScrambleText.map(text => (
-                  <ScrambleText key={text.text} {...text} duration={1} className='font-semibold' />
+                  <ScrambleText key={text.text} {...text} className='font-semibold' />
                 ))}
               </TextWrapper>
             </TextPosition>
