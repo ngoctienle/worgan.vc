@@ -48,6 +48,7 @@ const SplashView: React.FC = () => {
     tl.to(progressContentRef.current, {
       width: '40vw',
       duration: 0.6,
+      delay: 0.8,
       border: `1px solid ${loadingColor}`,
       backgroundColor: '#0e0e0efc',
       ease: 'power4',
@@ -104,7 +105,8 @@ const SplashView: React.FC = () => {
 
         gsap.to(scopeRef.current, {
           opacity: 0,
-          duration: 0.4,
+          duration: 0.5,
+          scale: 0.95,
           delay: 0.8,
           ease: 'power4.out',
           onComplete() {
